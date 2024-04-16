@@ -292,6 +292,18 @@ const GridBase = memo(({
         const lookupData = dataRef.current.lookups || {};
         return lookupData[lookupMap[field].lookup] || [];
     };
+
+    useEffect(() => {
+        if (hideTopFilters) {
+            dispatchData({
+                type: actionsStateProvider.PASS_FILTERS_TOHEADER, payload: {
+                    filterButton: null,
+                    hidden: { search: true, operation: true, export: true, print: true, filter: true }
+                }
+            });
+        }
+    }, []);
+
     const { gridColumns, pinnedColumns, lookupMap } = useMemo(() => {
         const baseColumnList = columns || model?.gridColumns || model?.columns;
         const pinnedColumns = { left: [GRID_CHECKBOX_SELECTION_COL_DEF.field], right: [] };
@@ -628,7 +640,7 @@ const GridBase = memo(({
                 <GridToolbarContainer {...props}>
                     <GridToolbarColumnsButton />
                     <GridToolbarFilterButton />
-                    <Button startIcon={<FilterListOffIcon />} onClick={clearFilters} size="small">{"CLEAR THIS FILTER"}</Button>
+                    <Button startIcon={<FilterListOffIcon />} onClick={clearFilters} size="small">{"CLEAR FILTER"}</Button>
                     {effectivePermissions.export && (
                         <CustomExportButton handleExport={handleExport} showPivotExportBtn={model?.showPivotExportBtn} showOnlyExcelExport={model.showOnlyExcelExport} />
                     )}
@@ -676,7 +688,12 @@ const GridBase = memo(({
         if (forAssignment || !updatePageTitle) {
             return;
         }
-        dispatchData({ type: actionsStateProvider.PAGE_TITLE_DETAILS, payload: <PageTitle icon="" titleHeading={model?.pageTitle || model?.title} titleDescription={model?.titleDescription} title={model?.title} /> })
+        dispatchData({ type: actionsStateProvider.PAGE_TITLE_DETAILS, payload: { icon: "", titleHeading: model?.pageTitle || model?.title, titleDescription: model?.titleDescription, title: model?.title } })
+        return () => {
+            dispatchData({
+                type: actionsStateProvider.PAGE_TITLE_DETAILS, payload: null
+            })
+        }
     }, [])
 
     useEffect(() => {

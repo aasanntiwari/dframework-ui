@@ -4,14 +4,15 @@ const initialState = {
     dataForm: '',
     pageTitleDetails:null,
     modal:null,
-    pageBackButton:{ status: false, backRoute: "" },
+    pageBackButton:null,
     gridSettings:{},
     getLocal:{},
     getUserData:null,
     preferences: [],
     currentPreference: null,
     totalPreferences: null,
-    loaderOpen: false
+    loaderOpen: false,
+    filtersInHeader: {}
   };
 
   export default initialState;
